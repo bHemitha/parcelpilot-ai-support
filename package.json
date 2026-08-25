@@ -9,7 +9,7 @@
                     "server":  "node backend/server.js",
                     "client":  "npm run dev --prefix frontend",
                     "dev":  "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"node backend/server.js\" \"npm run dev --prefix frontend\"",
-                    "build":  "npm --prefix frontend install \u0026\u0026 npm --prefix frontend run build",
+                    "build":  "cd frontend \u0026\u0026 npm install --include=dev \u0026\u0026 npm run build",
                     "test":  "node tests/backend.test.js"
                 },
     "dependencies":  {
