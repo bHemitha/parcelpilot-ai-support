@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Production build
+frontend/dist/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Local SQLite database & locks
+parcelpilot.db
+parcelpilot.db-wal
+parcelpilot.db-shm
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
