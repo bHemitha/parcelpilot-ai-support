@@ -60,15 +60,15 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Production Static Serving for Single-URL Cloud Deployments (Render, Railway, Vercel, Fly.io, etc.)
+// Production Static Serving for Single-URL Cloud Deployments (Express 5 compatible)
 const frontendDistPath = path.resolve(__dirname, '../frontend/dist');
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) {
-      return next();
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+      return res.sendFile(path.join(frontendDistPath, 'index.html'));
     }
-    res.sendFile(path.join(frontendDistPath, 'index.html'));
+    next();
   });
 }
 
@@ -91,3 +91,4 @@ export const server = app.listen(PORT, () => {
 });
 
 export default app;
+
