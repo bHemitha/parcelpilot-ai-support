@@ -14,7 +14,7 @@ This application is architected for **zero-configuration, single-URL full-stack 
    - **Build Command:** `npm install && npm run build`
    - **Start Command:** `npm start`
 5. Under **Environment Variables**, add:
-   - `GEMINI_API_KEY`: `AQ.Ab8RN6JAQR8s7DimhckwiWatf8UJX03boQveR2PsNjpzpV9X7g` (or your preferred key)
+   - `GEMINI_API_KEY`: `your_gemini_api_key_here` (or your preferred key)
    - `REFERENCE_TIMESTAMP`: `2026-08-16T11:00:00+05:30`
 6. Click **Deploy Web Service**!
    - Render will build the frontend, start the server, and give you a live HTTPS link (e.g. `https://parcelpilot-ai.onrender.com`).
@@ -26,7 +26,7 @@ This application is architected for **zero-configuration, single-URL full-stack 
 1. Go to **[Railway.app](https://railway.app)** and click **New Project -> Deploy from GitHub repo**.
 2. Select your repository.
 3. In **Variables**, add:
-   - `GEMINI_API_KEY`: `AQ.Ab8RN6JAQR8s7DimhckwiWatf8UJX03boQveR2PsNjpzpV9X7g`
+   - `GEMINI_API_KEY`: `your_gemini_api_key_here`
    - `REFERENCE_TIMESTAMP`: `2026-08-16T11:00:00+05:30`
 4. Railway automatically detects `npm run build` and `npm start` and deploys your application on a live public URL.
 
