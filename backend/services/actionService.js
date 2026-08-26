@@ -232,13 +232,13 @@ export class ActionService {
         UPDATE actions 
         SET status = 'EXECUTED', confirmed_at = CURRENT_TIMESTAMP, executed_at = CURRENT_TIMESTAMP
         WHERE action_id = ?
-      `).run(actionId);
+      `).run(action.action_id);
 
       db.prepare(`
         UPDATE action_confirmations
         SET status = 'CONFIRMED'
         WHERE action_id = ?
-      `).run(actionId);
+      `).run(action.action_id);
 
       // Create permanent audit log
       const logId = `AUD-EXE-${uuidv4().substring(0, 8).toUpperCase()}`;
@@ -298,18 +298,18 @@ export class ActionService {
    */
   static rejectAction(actionId, user, reason = 'User declined execution') {
     const db = getDatabase();
-    const action = db.prepare('SELECT * FROM actions WHERE action_id = ?').get(actionId);
+    const action = actionId && actionId.startsWith('CONF-') ? db.prepare('SELECT a.* FROM actions a JOIN action_confirmations c ON a.action_id = c.action_id WHERE c.token = ?').get(actionId) : db.prepare('SELECT * FROM actions WHERE action_id = ?').get(actionId);
     if (!action) return { error: 'NOT_FOUND', message: `Action ${actionId} not found.` };
 
     db.prepare(`
       UPDATE actions 
       SET status = 'REJECTED', rejected_at = CURRENT_TIMESTAMP, rejection_reason = ?
       WHERE action_id = ?
-    `).run(reason, actionId);
+    `).run(reason, action.action_id);
 
     db.prepare(`
       UPDATE action_confirmations SET status = 'REJECTED' WHERE action_id = ?
-    `).run(actionId);
+    `).run(action.action_id);
 
     const logId = `AUD-REJ-${uuidv4().substring(0, 8).toUpperCase()}`;
     db.prepare(`
