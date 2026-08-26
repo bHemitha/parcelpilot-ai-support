@@ -1,0 +1,23 @@
+================================================================================
+CALQUITY AI ENGINEER ASSESSMENT SUBMISSION ? KEY DETAILS
+================================================================================
+
+1. Full Name: Bhagawan Hemitha
+2. Email Address: behemitha44@gmail.com
+3. Resume: Bhagawan_Hemitha_Resume_CalQuity.pdf
+4. GitHub Submission Link: https://github.com/bHemitha/parcelpilot-ai-support
+5. Live Hosted Agent URL: https://parcelpilot-ai-support-twea.onrender.com
+6. Submission Video Link: [Insert your Loom / YouTube / Drive link here]
+
+--------------------------------------------------------------------------------
+TEXT FOR "Anything else you'd like us to know?" FIELD IN GOOGLE FORM:
+--------------------------------------------------------------------------------
+We built ParcelPilot AI with production-grade enterprise requirements in mind:
+1. Strict Data Pack Boundary: Deterministic 6-stage pipeline ensuring zero LLM hallucinations over unanswerable queries (Case A missing data vs Case B out-of-scope).
+2. 5-Tier Precedence Engine: Sourced dynamically so Tier 1 Signed Agreements strictly override Tier 2 Active SOPs and Tier 5 Historical Tickets.
+3. Hardware Data-Layer RBAC: SQL-level tenant isolation preventing cross-tenant data leakage.
+4. 2-Phase HITL State Actions: Interactive confirmation cards requiring explicit user approval before mutating live database state, with cryptographic tokens and double-execution protection.
+5. Proactive Operations Radar: Real-time SLA breach tracking, security anomaly detection, and automated ticket-to-Known-Issue clustering (KI-208, KI-211, KI-304) synced via Server-Sent Events (SSE).
+
+Complete architectural documentation (ARCHITECTURE.md), product strategy notes (PRODUCT_NOTE.md), and our enterprise scaled policy RAG evaluation and failure recovery framework (EVALS_AND_RECOVERY.md) are included directly in the root of the GitHub repository.
+================================================================================
