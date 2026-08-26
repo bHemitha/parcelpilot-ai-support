@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [identities, setIdentities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [realtimeConnected, setRealtimeConnected] = useState(false);
 
@@ -131,3 +131,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+
