@@ -3,8 +3,7 @@ import { AgentService } from '../services/agentService.js';
 
 const router = express.Router();
 
-// POST /api/agent/query
-router.post('/query', async (req, res) => {
+const handleAgentQuery = async (req, res) => {
   const { query, history } = req.body;
   if (!query || query.trim() === '') {
     return res.status(400).json({ error: 'Query string is required' });
@@ -20,6 +19,11 @@ router.post('/query', async (req, res) => {
       message: error.message
     });
   }
-});
+};
+
+// Mount handlers for all variations
+router.post('/', handleAgentQuery);
+router.post('/query', handleAgentQuery);
+router.post('/chat', handleAgentQuery);
 
 export default router;

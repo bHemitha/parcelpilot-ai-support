@@ -9,24 +9,31 @@ export function AuthProvider({ children }) {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const [backendHealthy, setBackendHealthy] = useState(true);
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Load identities and current user on mount
+  // Initial Auth & Health Check
   useEffect(() => {
     async function initAuth() {
       try {
         const savedToken = localStorage.getItem('parcelpilot_token');
         const headers = savedToken ? { Authorization: `Bearer ${savedToken}` } : {};
 
-        const [idRes, meRes] = await Promise.all([
-          fetch('/api/auth/identities', { headers }),
-          fetch('/api/auth/me', { headers })
+        const [healthRes, idRes, meRes] = await Promise.all([
+          fetch('/api/health').catch(() => ({ ok: false })),
+          fetch('/api/auth/identities', { headers }).catch(() => ({ ok: false })),
+          fetch('/api/auth/me', { headers }).catch(() => ({ ok: false }))
         ]);
+
+        if (healthRes.ok) {
+          setBackendHealthy(true);
+        } else {
+          setBackendHealthy(false);
+        }
 
         if (idRes.ok) {
           const idData = await idRes.json();
@@ -39,6 +46,7 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         console.error('Failed to initialize auth state:', err);
+        setBackendHealthy(false);
       } finally {
         setLoading(false);
       }
@@ -47,7 +55,20 @@ export function AuthProvider({ children }) {
     initAuth();
   }, []);
 
-  // Connect to Server-Sent Events (SSE) stream for real-time live data sync
+  // Periodic health check every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/health');
+        setBackendHealthy(res.ok);
+      } catch (err) {
+        setBackendHealthy(false);
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Server-Sent Events for Live Sync
   useEffect(() => {
     let eventSource = null;
     let retryTimeout = null;
@@ -55,20 +76,12 @@ export function AuthProvider({ children }) {
     function connectSSE() {
       try {
         eventSource = new EventSource('/api/events');
-
-        eventSource.onopen = () => {
-          setRealtimeConnected(true);
-        };
-
-        eventSource.addEventListener('STATE_UPDATED', (e) => {
-          setRefreshTrigger(prev => prev + 1);
-        });
-
+        eventSource.onopen = () => setRealtimeConnected(true);
+        eventSource.addEventListener('STATE_UPDATED', () => setRefreshTrigger(prev => prev + 1));
         eventSource.onerror = () => {
           setRealtimeConnected(false);
           eventSource.close();
-          // Retry after 5s
-          retryTimeout = setTimeout(connectSSE, 5000);
+          retryTimeout = setTimeout(connectSSE, 6000);
         };
       } catch (err) {
         setRealtimeConnected(false);
@@ -76,7 +89,6 @@ export function AuthProvider({ children }) {
     }
 
     connectSSE();
-
     return () => {
       if (eventSource) eventSource.close();
       if (retryTimeout) clearTimeout(retryTimeout);
@@ -120,6 +132,7 @@ export function AuthProvider({ children }) {
         switchPersona,
         refreshTrigger,
         realtimeConnected,
+        backendHealthy,
         triggerRefresh: () => setRefreshTrigger(prev => prev + 1)
       }}
     >
@@ -131,4 +144,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-

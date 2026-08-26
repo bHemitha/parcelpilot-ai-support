@@ -3,7 +3,7 @@ import { Package, MessageSquare, Radar, ShieldCheck, Database, Sun, Moon, User }
 import { useAuth } from '../context/AuthContext';
 
 export function Navbar({ activeTab, setActiveTab }) {
-  const { currentUser, identities, switchPersona, theme, toggleTheme, realtimeConnected } = useAuth();
+  const { currentUser, identities, switchPersona, theme, toggleTheme, realtimeConnected, backendHealthy } = useAuth();
 
   const tabs = [
     { id: 'chat', label: 'AI Agent', icon: MessageSquare },
@@ -43,9 +43,24 @@ export function Navbar({ activeTab, setActiveTab }) {
         </nav>
 
         <div className="navbar-right">
-          <div className="live-status-pill" title="Real-time backend synchronization active">
-            <span className="pulse-indicator" />
-            <span>{realtimeConnected ? 'Live Sync' : 'Sync Active'}</span>
+          {/* Visible Backend Health Status */}
+          <div
+            className={`live-status-pill ${backendHealthy ? 'online' : 'offline'}`}
+            title={backendHealthy ? 'Backend API connected and responding normally' : 'Cannot reach backend server'}
+            style={{
+              background: backendHealthy ? 'var(--badge-emerald-bg)' : 'var(--badge-rose-bg)',
+              color: backendHealthy ? 'var(--badge-emerald-text)' : 'var(--badge-rose-text)',
+              borderColor: backendHealthy ? 'var(--badge-emerald-border)' : 'var(--badge-rose-border)'
+            }}
+          >
+            <span
+              className="pulse-indicator"
+              style={{
+                background: backendHealthy ? 'var(--accent-emerald)' : 'var(--accent-rose)',
+                boxShadow: backendHealthy ? '0 0 6px var(--accent-emerald)' : '0 0 6px var(--accent-rose)'
+              }}
+            />
+            <span>{backendHealthy ? (realtimeConnected ? 'Live Sync' : 'Online') : 'Offline'}</span>
           </div>
 
           <div className="user-persona-box">

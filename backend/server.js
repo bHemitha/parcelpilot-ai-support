@@ -46,6 +46,7 @@ app.use('/api/known-issues', knownIssueRoutes);
 app.use('/api/audit-logs', auditRoutes);
 app.use('/api/actions', actionRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/chat', agentRoutes);
 app.use('/api/proactive', proactiveRoutes);
 app.use('/api/trust', trustRoutes);
 
@@ -91,4 +92,5 @@ export const server = app.listen(PORT, () => {
 });
 
 export default app;
+
 
