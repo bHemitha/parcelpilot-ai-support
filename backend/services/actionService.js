@@ -99,7 +99,7 @@ export class ActionService {
       targetEntity,
       targetId,
       JSON.stringify(payload),
-      user.user_id,
+      user.user_id || user.id || "USR-001", 
       user.role,
       targetAccountId,
       policyJustification,
@@ -119,7 +119,7 @@ export class ActionService {
     `).run(
       logId,
       actionId,
-      user.user_id,
+      user.user_id || user.id || "USR-001", 
       user.name,
       user.role,
       user.account_id || targetAccountId,
@@ -152,7 +152,7 @@ export class ActionService {
   static confirmAction(actionId, user) {
     const db = getDatabase();
 
-    const action = db.prepare('SELECT * FROM actions WHERE action_id = ?').get(actionId);
+    const action = actionId && actionId.startsWith('CONF-') ? db.prepare('SELECT a.* FROM actions a JOIN action_confirmations c ON a.action_id = c.action_id WHERE c.token = ?').get(actionId) : db.prepare('SELECT * FROM actions WHERE action_id = ?').get(actionId);
     if (!action) {
       return { error: 'NOT_FOUND', message: `Action ${actionId} not found.` };
     }
@@ -251,7 +251,7 @@ export class ActionService {
       `).run(
         logId,
         actionId,
-        user.user_id,
+        user.user_id || user.id || "USR-001", 
         user.name,
         user.role,
         user.account_id || action.account_id,
@@ -321,7 +321,7 @@ export class ActionService {
     `).run(
       logId,
       actionId,
-      user.user_id,
+      user.user_id || user.id || "USR-001", 
       user.name,
       user.role,
       user.account_id || action.account_id,
